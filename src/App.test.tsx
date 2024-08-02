@@ -48,7 +48,6 @@ it("should use user event to change select value", async () => {
   ).findByShadowRole("combobox");
   await user.selectOptions(shadowSelect, "2");
   expect(resultDiv).toHaveTextContent("Selected option: 2");
-  screen.debug();
 });
 it("should run onChange when value changes", async () => {
   const user = userEvent.setup();
