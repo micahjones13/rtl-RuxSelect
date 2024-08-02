@@ -2,6 +2,8 @@ import { fireEvent, render } from "@testing-library/react";
 import { screen, within } from "shadow-dom-testing-library";
 
 import App from "./App";
+import SelectMenuTest from "./SelectTest";
+import { expect } from "vitest";
 import { userEvent } from "@testing-library/user-event";
 
 it("should have hello world", () => {
@@ -46,9 +48,18 @@ it("should use user event to change select value", async () => {
   ).findByShadowRole("combobox");
   await user.selectOptions(shadowSelect, "2");
   expect(resultDiv).toHaveTextContent("Selected option: 2");
+  screen.debug();
 });
-// it("finds native select just fine", async () => {
-//   render(<App />);
-//   const nativeSelect = screen.getByRole("combobox");
-//   expect(nativeSelect).toBeDefined();
-// });
+it("should run onChange when value changes", async () => {
+  const user = userEvent.setup();
+  const mock = vi.fn();
+  render(<SelectMenuTest handleChange={mock} />);
+  const selectMenu: HTMLRuxSelectElement = await screen.findByTestId(
+    "select-menu-test"
+  );
+  const shadowSelect: HTMLSelectElement = await within(
+    selectMenu
+  ).findByShadowRole("combobox");
+  await user.selectOptions(shadowSelect, "2");
+  expect(mock).toHaveBeenCalledTimes(1);
+});
